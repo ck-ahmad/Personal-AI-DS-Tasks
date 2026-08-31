@@ -1,4 +1,3 @@
-# 🧠 Personal-AI-DS-Tasks
 
 <p align="center">
   <img src="https://img.shields.io/badge/AI-Artificial%20Intelligence-8A2BE2?style=for-the-badge&logo=openai&logoColor=white" />
