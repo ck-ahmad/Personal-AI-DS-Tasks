@@ -1,0 +1,11 @@
+age,workclass,fnlwgt,education,education-num,marital-status,occupation,relationship,race,sex,capital-gain,capital-loss,hours-per-week,native-country,actual,predicted,predicted_probability,error_type
+53,Local-gov,139671,Some-college,10,Married-civ-spouse,Exec-managerial,Husband,White,Male,0,0,50,United-States,0,1,0.7031413714453115,false_positive
+42,Private,269028,Doctorate,16,Married-civ-spouse,Prof-specialty,Husband,White,Male,0,0,40,France,0,1,0.8719717979442977,false_positive
+43,Self-emp-not-inc,113211,HS-grad,9,Married-civ-spouse,Exec-managerial,Wife,White,Female,0,0,40,United-States,0,1,0.5246259740456772,false_positive
+39,Private,167482,Some-college,10,Married-civ-spouse,Sales,Husband,White,Male,0,0,40,United-States,0,1,0.5136738614914389,false_positive
+35,Private,198341,Bachelors,13,Married-civ-spouse,Exec-managerial,Husband,Asian-Pac-Islander,Male,0,0,40,,0,1,0.6131250962548127,false_positive
+50,Private,151580,Assoc-acdm,12,Married-civ-spouse,Craft-repair,Husband,White,Male,0,0,45,United-States,0,1,0.5646130432864966,false_positive
+41,State-gov,363591,Assoc-voc,11,Married-civ-spouse,Exec-managerial,Husband,White,Male,0,0,40,United-States,0,1,0.5901646390475359,false_positive
+32,Private,193042,Bachelors,13,Married-civ-spouse,Sales,Husband,White,Male,0,0,44,United-States,0,1,0.611867408869582,false_positive
+72,Private,183616,HS-grad,9,Married-civ-spouse,Exec-managerial,Wife,White,Female,0,0,50,England,0,1,0.5211771208894098,false_positive
+31,Private,341672,Bachelors,13,Married-civ-spouse,Adm-clerical,Husband,Asian-Pac-Islander,Male,0,0,60,India,0,1,0.5255876832971262,false_positive

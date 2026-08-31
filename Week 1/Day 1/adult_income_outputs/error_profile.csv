@@ -1,0 +1,3 @@
+error_type,n,age_median,education-num_median,hours-per-week_median,capital-gain_median,capital-loss_median,workclass_top,education_top,marital-status_top,occupation_top,relationship_top,sex_top
+False positives,393,43.0,13.0,40.0,0.0,0.0,Private,Bachelors,Married-civ-spouse,Exec-managerial,Husband,Male
+False negatives,819,41.0,10.0,40.0,0.0,0.0,Private,HS-grad,Married-civ-spouse,Craft-repair,Husband,Male
