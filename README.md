@@ -26,12 +26,14 @@
 * 📈 Data Analysis
 * 🧪 Model Evaluation
 * 🔍 Error Analysis
+* ⚙️ Model Optimization
+* 🛡️ Data Leakage Prevention
 
-The purpose of this repository is to practice the **complete data science and machine-learning workflow**, starting from understanding a problem and dataset, moving through preprocessing and analysis, and finally evaluating results and identifying improvements.
+The purpose of this repository is to practice the **complete data science and machine-learning workflow**, starting from understanding a problem and dataset, moving through preprocessing and analysis, establishing baselines, improving model performance, and finally evaluating results and identifying remaining weaknesses.
 
 Each task documents:
 
-> **What I did → How I did it → What I found → What problems I faced → What I will improve next**
+> **What I did → How I did it → What I found → What problems I faced → How I improved it → What I will improve next**
 
 ---
 
@@ -41,19 +43,27 @@ Each task documents:
 
 * AI problem definition
 * Business-oriented problem solving
-* Classification problems
+* Binary classification
+* Data-driven decision making
 * Model evaluation
 * Error analysis
-* Data-driven decision making
+* Performance optimization
+* Responsible AI considerations
 
 ## 🧠 Machine Learning
 
 * Supervised Learning
 * Binary Classification
 * Baseline Modeling
+* Feature Engineering
+* Data Preprocessing
+* Missing Value Handling
+* Categorical Encoding
 * Train / Development / Test Splitting
 * Stratified Sampling
 * Reproducible Experiments
+* Gradient Boosting
+* Model Optimization
 * Precision
 * Recall
 * F1 Score
@@ -62,6 +72,7 @@ Each task documents:
 * Confusion Matrix
 * False Positive / False Negative Analysis
 * Model Comparison
+* Data Leakage Prevention
 
 ## 📊 Data Science
 
@@ -76,8 +87,24 @@ Each task documents:
 * Class Distribution Analysis
 * Feature Investigation
 * Error Pattern Analysis
+* Model Performance Analysis
+* Experiment Tracking
 
-## 💻 Tools & Technologies
+## ⚙️ Model Development
+
+* Baseline → ML model progression
+* Preprocessing pipelines
+* Median imputation
+* Ordinal encoding
+* Gradient boosting
+* Validation-based experimentation
+* Hold-out test evaluation
+* Performance comparison
+* Error-driven improvement
+
+---
+
+# 💻 Tools & Technologies
 
 <p align="center">
 
@@ -111,37 +138,63 @@ The goal is to predict whether a person earns more than **$50,000 per year**.
 | `<=50K` |  `0`  |
 | `>50K`  |  `1`  |
 
-The task was designed as a starting point for a real-world binary classification problem where the goal is not only to build a model, but also to understand the data, establish reliable baselines, evaluate performance correctly, and analyze model errors.
+The task started as a simple binary classification problem and was progressively developed into a complete machine-learning workflow.
+
+The objective was not simply to obtain a high accuracy score. Instead, I focused on:
+
+* Building a reliable data pipeline
+* Preventing data leakage
+* Establishing meaningful baselines
+* Understanding the data through EDA
+* Improving predictive performance using a real ML model
+* Evaluating multiple metrics
+* Performing error analysis
+* Maintaining a clean train/dev/test methodology
 
 ---
 
-# 💼 Business Problem
+# 📊 Dataset Overview
 
-A possible business application is **targeted higher-value outreach**.
+The Adult dataset contains demographic, employment, education, and financial-related attributes used to predict income class.
 
-For example, a company may want to identify people who are more likely to belong to the higher-income group before contacting them.
+The dataset includes features such as:
 
-In this scenario, incorrectly predicting someone as a high-income individual can result in:
+### Numerical Features
 
-* Wasted outreach effort
-* Unnecessary marketing cost
-* Lower-quality targeting
+* `age`
+* `fnlwgt`
+* `education-num`
+* `capital-gain`
+* `capital-loss`
+* `hours-per-week`
 
-Therefore, I selected:
+### Categorical Features
 
-# 🎯 Precision as the Primary Metric
+* `workclass`
+* `education`
+* `marital-status`
+* `occupation`
+* `relationship`
+* `race`
+* `sex`
+* `native-country`
 
-**Precision answers:**
+### Target
 
-> When the model predicts that someone earns more than $50K, how often is that prediction correct?
+```text
+income
+```
 
-I prioritized precision over recall because the business scenario places more importance on avoiding unnecessary positive predictions.
+with two classes:
 
-Recall is still monitored because a model that misses too many actual high-income individuals would also have limited business value.
+```text
+<=50K
+>50K
+```
 
 ---
 
-# 📂 Dataset
+# 📂 Dataset Loading
 
 The dataset was loaded directly from **OpenML** using Scikit-learn.
 
@@ -157,46 +210,68 @@ adult = fetch_openml(
 df = adult.frame.copy()
 ```
 
-Using `fetch_openml()` makes the dataset loading process reproducible and avoids manually preparing the raw UCI files.
+Using `fetch_openml()` makes the dataset-loading process reproducible and avoids manually downloading and preparing the raw dataset.
 
 ---
 
 # 🧹 Data Cleaning
 
-Before performing analysis, I cleaned the dataset to make the data consistent and suitable for evaluation.
+Before modeling, I cleaned the dataset to make the data consistent and suitable for machine learning.
 
-### What I did
+### What I Did
 
-* Loaded the dataset into a Pandas DataFrame
-* Inspected the raw shape and data types
+* Loaded the dataset into Pandas
+* Inspected shape and data types
+* Checked duplicate rows
 * Removed unnecessary whitespace
-* Converted `?` values into missing values
-* Handled raw-UCI-style `" ?"` values
-* Normalized the target labels
-* Removed the trailing `.` when necessary
+* Detected `?` and `" ?"` missing-value representations
+* Converted missing-value markers to `NaN`
+* Normalized target labels
+* Removed trailing `.` from target labels when present
 * Converted income into binary `0/1`
-* Removed rows where the target was missing
-* Checked remaining missing values
+* Removed rows with missing target values
+* Checked missing-value counts
+* Separated features from the target
 
-### Missing Values
+### Dataset Size
 
-The Adult dataset can represent missing categorical information using:
+The cleaned dataset contained approximately:
 
 ```text
-?
+48,842 rows
 ```
 
-I converted these values to:
+with a positive-class rate of approximately:
 
-```python
-np.nan
+```text
+23.93%
 ```
 
-This allows Pandas and later preprocessing pipelines to handle missing values correctly.
+This means that the `>50K` class is the minority class.
 
-### Target Conversion
+---
 
-The income target was converted into:
+# 🔎 Missing Value Analysis
+
+Missing values were identified particularly in categorical features.
+
+Important missing-value counts included approximately:
+
+| Feature          | Missing Values |
+| ---------------- | -------------: |
+| `occupation`     |          2,809 |
+| `workclass`      |          2,799 |
+| `native-country` |            857 |
+
+Instead of allowing these values to break the ML pipeline, missing values were handled during preprocessing.
+
+This was especially important because categorical variables cannot be directly passed into many machine-learning algorithms.
+
+---
+
+# 🎯 Target Conversion
+
+The original income labels were normalized and converted into binary values:
 
 ```python
 {
@@ -205,13 +280,13 @@ The income target was converted into:
 }
 ```
 
-This transforms the original problem into a standard binary classification task.
+This converted the problem into a standard binary classification task.
 
 ---
 
 # 🔎 Exploratory Data Analysis
 
-After cleaning the dataset, I performed **Exploratory Data Analysis (EDA)** to understand the structure and behavior of the data before modeling.
+After cleaning, I performed **Exploratory Data Analysis (EDA)** to understand the dataset before training the model.
 
 ## 📋 Dataset Inspection
 
@@ -219,38 +294,66 @@ I examined:
 
 * Dataset shape
 * Column names
-* Numerical columns
-* Categorical columns
 * Data types
-* Numerical statistics
+* Numerical features
+* Categorical features
 * Missing values
-* Category frequencies
-* Class distribution
+* Unique categories
+* Numerical statistics
+* Target distribution
 
-### Numerical Analysis
+---
+
+# 📊 Numerical Analysis
 
 For numerical features, I calculated:
 
 * Mean
 * Median
 * Standard deviation
+* Minimum
+* Maximum
 * 25th percentile
 * 75th percentile
-* Missing-value count
+* Missing-value counts
 
 Important numerical features included:
 
 * `age`
+* `fnlwgt`
 * `education-num`
-* `hours-per-week`
 * `capital-gain`
 * `capital-loss`
+* `hours-per-week`
+
+---
+
+# 📈 Categorical Analysis
+
+I investigated the distribution of categorical variables including:
+
+* Workclass
+* Education
+* Marital status
+* Occupation
+* Relationship
+* Race
+* Sex
+* Native country
+
+This helped identify:
+
+* High-frequency categories
+* Rare categories
+* Missing values
+* Feature diversity
+* Potential predictive relationships
 
 ---
 
 # 📊 Visual Analysis
 
-I created visualizations to understand important feature distributions.
+I generated visualizations for important features.
 
 ### Numerical Features
 
@@ -273,105 +376,112 @@ Bar plots were created for:
 
 These visualizations helped identify:
 
-* Common categories
-* Skewed numerical features
-* Concentration around certain values
-* Potential missing-value problems
-* Differences in feature distributions
-
-The notebook also saves these plots for later review.
+* Skewed distributions
+* Dominant categories
+* Concentrated values
+* Missing-value patterns
+* Potential relationships with the target
 
 ---
 
 # 📈 Class Distribution
 
-I calculated the number and percentage of:
+The positive class represented approximately:
 
-* Negative examples: `<=50K`
-* Positive examples: `>50K`
+```text
+23.93%
+```
 
-The positive-class percentage is important because the dataset is not perfectly balanced.
+of the dataset.
 
-This immediately showed why **accuracy alone should not be the main metric**.
+Therefore, the dataset is not perfectly balanced.
 
-A model can obtain relatively high accuracy by predicting the majority class while failing to identify the positive class.
+This is important because a model can obtain relatively high accuracy by favoring the majority class without providing useful positive predictions.
+
+For this reason, accuracy was not treated as the only performance measure.
 
 ---
 
 # 🔀 Reproducible Train / Dev / Test Split
 
-A major part of this task was creating a reliable evaluation setup.
-
-I used:
+I created a reproducible three-way split.
 
 ```python
 RANDOM_STATE = 42
-TEST_SIZE = 0.20
 ```
 
-The final test set was created first and kept completely separate from experimentation.
+The final split was approximately:
 
-### Dataset Split
+| Dataset     |   Rows | Percentage |
+| ----------- | -----: | :--------: |
+| Training    | 34,188 |     70%    |
+| Development |  4,885 |     10%    |
+| Final Test  |  9,769 |     20%    |
 
-* 🟦 **Training:** approximately 70%
-* 🟨 **Development:** approximately 10%
-* 🟥 **Final Hold-out Test:** approximately 20%
+The split was **stratified on the target variable**.
 
-The split was **stratified on the target** so that the proportion of positive and negative examples remains similar across the datasets.
+This preserves a similar class distribution across training, development, and test data.
 
-### Why the Hold-out Test Matters
+---
 
-The final test set represents unseen data.
+# 🔒 Data Leakage Prevention
 
-If I repeatedly inspect the test results while selecting features, rules, or hyperparameters, I indirectly start optimizing for the test set.
+One of the important improvements during development was identifying and preventing possible **target leakage**.
 
-That causes **test-set leakage** and can make the final reported performance look better than the model's true performance.
+The target column was explicitly separated from the feature matrix.
 
-Therefore:
+Conceptually:
 
-> 🔒 **The hold-out test set is only used for final evaluation.**
+```python
+X = df.drop(columns=["target", target_col])
+y = df[target_col]
+```
+
+The target was therefore prevented from accidentally becoming an input feature.
+
+This is important because including the target or information derived directly from the target can produce artificially high accuracy while making the model invalid for real-world prediction.
 
 ---
 
 # 🧪 Baseline Modeling
 
-Before building advanced machine-learning models, I created two simple baselines.
+Before improving the model, I established simple baselines.
 
-The purpose of baselines is to establish a **minimum performance reference**.
-
-A future ML model should provide meaningful improvement over these simple approaches.
+These provided reference points for determining whether the ML model actually learned useful patterns.
 
 ---
 
-## 🧱 Baseline 1 — Majority Class
+# 🧱 Baseline 1 — Majority Class
 
-The first baseline predicts the most common class for every person.
+The first baseline predicts the most common class for every sample.
 
-In this dataset, the negative class is the majority.
+Because `<=50K` is the majority class, the baseline essentially predicts:
 
-Therefore, the baseline essentially says:
+```text
+<=50K
+```
 
-> **"Predict <=50K for everyone."**
+for everyone.
 
-### Why use it?
+### Purpose
 
-Although this is a very simple model, it is important as a sanity check.
+The majority baseline answers:
 
-It shows what performance can be achieved without learning anything meaningful from the features.
+> How well can we perform without using any meaningful feature information?
 
-The majority baseline can have reasonable accuracy because the negative class dominates, but it does not identify the positive class effectively.
+It is therefore a minimum reference point.
 
 ---
 
 # 🎓 Baseline 2 — Education Rule
 
-The second baseline uses a single feature:
+The second baseline used:
 
 ```text
 education-num
 ```
 
-The rule is:
+with the rule:
 
 ```text
 education-num >= 13
@@ -385,303 +495,471 @@ Otherwise:
 Predict <=50K
 ```
 
-### Why did I choose this rule?
-
-Education is reasonably associated with income.
-
-A threshold of `13` provides a simple and interpretable heuristic that roughly represents **bachelor-level education or above**.
-
-The important point is that this is intentionally simple.
-
-It gives future ML models a meaningful baseline to beat.
+This provided a more meaningful feature-based baseline.
 
 ---
 
-# 📏 Evaluation Framework
+# ❗ Why the Baselines Were Not Enough
 
-Both baselines were evaluated on the **untouched hold-out test set**.
+The two baselines were intentionally simple.
 
-I calculated six metrics:
+However, income depends on multiple variables simultaneously.
 
-| Metric        | Purpose                                                      |
-| ------------- | ------------------------------------------------------------ |
-| **Accuracy**  | Overall percentage of correct predictions                    |
-| **Precision** | Correctness of positive predictions                          |
-| **Recall**    | Percentage of actual positive cases found                    |
-| **F1 Score**  | Balance between precision and recall                         |
-| **ROC AUC**   | Overall ranking/discrimination ability                       |
-| **PR AUC**    | Positive-class performance, especially useful with imbalance |
-
----
-
-# 🎯 Why Precision?
-
-For this particular business scenario:
+For example:
 
 ```text
-Predicted >50K
-       ↓
-Person is contacted
+Education
+    +
+Age
+    +
+Occupation
+    +
+Workclass
+    +
+Hours Worked
+    +
+Capital Gain/Loss
+    ↓
+Income Prediction
 ```
 
-A false positive means:
+A single education threshold cannot capture these interactions.
+
+This motivated the transition from rule-based baselines to a proper machine-learning model.
+
+---
+
+# 🚀 Accuracy Improvement — What I Actually Did
+
+The biggest improvement in Task 1 was moving from simple rules to a **real supervised ML model with preprocessing**.
+
+Instead of relying only on:
+
+```text
+education-num >= 13
+```
+
+I allowed the model to learn relationships from the full feature set.
+
+---
+
+# 🧠 Model Used — HistGradientBoosting
+
+I introduced a **HistGradientBoosting** classifier as the main ML model.
+
+Gradient boosting works by building a sequence of decision-tree-based learners where later learners focus on correcting errors made by earlier learners.
+
+This makes it substantially more capable than a single manually defined threshold.
+
+### Why HistGradientBoosting?
+
+It was selected because it can model:
+
+* Nonlinear relationships
+* Feature interactions
+* Complex decision boundaries
+* Different relationships between numerical features and income
+
+This is particularly useful for the Adult dataset because income is influenced by combinations of demographic, education, employment, and financial features.
+
+---
+
+# ⚙️ Preprocessing Improvements
+
+The ML stage introduced a proper preprocessing workflow.
+
+## 1. Median Imputation
+
+Missing numerical values were handled using **median imputation**.
+
+Instead of dropping potentially useful rows, missing numerical values can be replaced using the median calculated from the training data.
+
+This provides a robust solution that is less affected by extreme values than mean imputation.
+
+---
+
+## 2. Categorical Encoding
+
+Categorical variables cannot directly be interpreted as numerical values by the model.
+
+Therefore, categorical data was transformed using an **ordinal encoding approach**.
+
+This allowed categorical variables such as:
+
+```text
+workclass
+occupation
+marital-status
+relationship
+education
+native-country
+```
+
+to be represented numerically for model training.
+
+Unknown categories encountered outside the fitting data were handled safely rather than causing the pipeline to fail.
+
+---
+
+# 🔄 Full ML Pipeline
+
+The improved workflow became:
+
+```text
+Raw Adult Dataset
+       ↓
+Data Cleaning
+       ↓
+Target Separation
+       ↓
+Train / Dev / Test Split
+       ↓
+Numerical Imputation
+       ↓
+Categorical Encoding
+       ↓
+HistGradientBoosting
+       ↓
+Predictions
+       ↓
+Evaluation
+       ↓
+Error Analysis
+```
+
+This was a major improvement over the original rule-based approach.
+
+---
+
+# 🎯 Why This Improved Accuracy
+
+The improvement came from allowing the model to learn from **all relevant features simultaneously** rather than relying on one manually selected feature.
+
+The model can learn patterns such as:
+
+```text
+Education + Age
+Education + Occupation
+Occupation + Hours Worked
+Age + Capital Gain
+Workclass + Education
+```
+
+and many other nonlinear relationships.
+
+This gives the classifier much more information than the education-only baseline.
+
+---
+
+# 📈 Accuracy Improvement Strategy
+
+The improvement process followed an iterative approach:
+
+### Step 1 — Establish Baselines
+
+I first measured:
+
+* Majority-class performance
+* Education-rule performance
+
+### Step 2 — Identify Weaknesses
+
+Error analysis showed that simple rules produced:
+
+* False positives
+* False negatives
+* Poor coverage of complex income patterns
+
+### Step 3 — Use More Features
+
+Instead of using only `education-num`, the ML model used the complete cleaned feature set.
+
+### Step 4 — Handle Missing Values
+
+Missing values were incorporated into a structured preprocessing stage.
+
+### Step 5 — Encode Categorical Features
+
+Categorical information was transformed into a representation usable by the ML model.
+
+### Step 6 — Train a Nonlinear Model
+
+HistGradientBoosting was used to learn nonlinear relationships and feature interactions.
+
+### Step 7 — Validate on Development Data
+
+The development set was used for experimentation and model assessment without touching the final hold-out test set.
+
+### Step 8 — Final Hold-out Evaluation
+
+After the development process, the final test set remained reserved for final evaluation.
+
+---
+
+# 🧪 Model Evaluation
+
+The model was evaluated using multiple metrics rather than accuracy alone.
+
+| Metric        | Why It Matters                             |
+| ------------- | ------------------------------------------ |
+| **Accuracy**  | Overall correctness                        |
+| **Precision** | Correctness of positive predictions        |
+| **Recall**    | Ability to find actual `>50K` cases        |
+| **F1 Score**  | Balance between precision and recall       |
+| **ROC AUC**   | Overall class discrimination               |
+| **PR AUC**    | Positive-class performance under imbalance |
+
+---
+
+# 🎯 Primary Business Metric — Precision
+
+The main business-oriented metric remained:
+
+# **Precision**
+
+Precision answers:
+
+> When the model predicts `>50K`, how often is that prediction correct?
+
+This was important because the selected business scenario assumes that positive predictions may lead to targeted outreach.
+
+A false positive can therefore represent:
+
+* Wasted outreach
+* Unnecessary marketing cost
+* Poor targeting
+
+However, recall and the other metrics were also monitored to ensure that improving precision did not result in a model that simply predicts the negative class.
+
+---
+
+# 🧮 Confusion Matrix
+
+The model was evaluated using a confusion matrix.
+
+|                   | Actual `<=50K` |  Actual `>50K` |
+| ----------------- | -------------: | -------------: |
+| Predicted `<=50K` |  True Negative | False Negative |
+| Predicted `>50K`  | False Positive |  True Positive |
+
+### False Positive
 
 ```text
 Predicted >50K
 Actual <=50K
 ```
 
-This represents an unnecessary contact.
-
-Therefore, precision is the main metric used to judge whether the model is producing useful positive predictions.
-
-However, I continue to monitor:
-
-* Recall
-* F1
-* ROC AUC
-* PR AUC
-
-so that improving precision does not completely destroy coverage of actual positive cases.
-
----
-
-# 🧮 Confusion Matrix
-
-I also generated confusion matrices for both baseline approaches.
-
-The four possible outcomes are:
-
-|                     |   Actual <=50K |    Actual >50K |
-| ------------------- | -------------: | -------------: |
-| **Predicted <=50K** |  True Negative | False Negative |
-| **Predicted >50K**  | False Positive |  True Positive |
-
-### Important Errors
-
-**False Positive**
-
-> Model predicts `>50K`, but actual income is `<=50K`.
-
-**False Negative**
-
-> Model predicts `<=50K`, but actual income is `>50K`.
-
-These errors are especially useful for understanding why the simple baseline is limited.
-
----
-
-# 🔍 Initial Error Analysis
-
-After evaluating the education-based rule, I performed an initial error analysis.
-
-I separated predictions into:
-
-### ❌ False Positives
-
-People who were predicted as:
+### False Negative
 
 ```text
->50K
+Predicted <=50K
+Actual >50K
 ```
 
-but actually belonged to:
-
-```text
-<=50K
-```
-
-### ❌ False Negatives
-
-People who were predicted as:
-
-```text
-<=50K
-```
-
-but actually belonged to:
-
-```text
->50K
-```
-
-I inspected at least:
-
-* 10 false positives
-* 10 false negatives
+These errors were analyzed to understand where the model still struggles.
 
 ---
 
-# 🧠 What I Looked For
+# 🔍 Error Analysis
 
-For the false-positive and false-negative examples, I examined features including:
+After training the ML model, I continued the error-analysis process.
 
-* `age`
-* `education`
-* `education-num`
-* `hours-per-week`
-* `capital-gain`
-* `capital-loss`
-* `workclass`
-* `occupation`
-* `marital-status`
-* `relationship`
-* `sex`
+I inspected:
 
-I also generated a compact error profile using numerical medians and common categorical values.
+* False positives
+* False negatives
+* Numerical feature profiles
+* Categorical feature patterns
+* Common characteristics of incorrectly classified samples
 
----
+This allowed me to move beyond simply asking:
 
-# 💡 Main Error Analysis Insight
+> "What is the accuracy?"
 
-The education rule is useful as a baseline, but it is too simple to represent the actual income problem.
+and instead ask:
 
-A person's income is affected by multiple factors at the same time.
-
-For example:
-
-**Education + Age + Occupation + Work Hours + Workclass + Capital Features**
-
-can provide much more information than education alone.
-
-This explains why a single threshold can produce both false positives and false negatives.
+> "Why is the model making these mistakes?"
 
 ---
 
-# ⚠️ Issues & Challenges I Identified
+# 🧠 Key Error Analysis Insight
+
+The main lesson from the baseline stage was that income prediction cannot be reliably represented by one simple rule.
+
+The ML model can use combinations of:
+
+```text
+Age
+Education
+Occupation
+Workclass
+Hours-per-week
+Capital Gain
+Capital Loss
+Marital Status
+Relationship
+```
+
+to build a more flexible decision function.
+
+This is the main reason the ML stage is expected to outperform the simple education heuristic.
+
+---
+
+# ⚠️ Issues & Challenges
 
 ## 1. Missing Categorical Values
 
-Features such as workclass, occupation, and native country can contain missing values.
+Several categorical features contained missing values.
 
-### Improvement
+### Solution
 
-Use consistent imputation or explicitly encode missing categories instead of ignoring them.
+Missing values were incorporated into the preprocessing pipeline rather than allowing them to cause model failures.
 
 ---
 
-## 2. Categorical Encoding
+## 2. Categorical Features
 
-Many important features are categorical.
+The dataset contains many categorical variables.
 
-Examples:
+### Solution
 
-* Workclass
-* Occupation
-* Marital status
-* Relationship
-* Native country
-
-Most ML algorithms require these values to be converted into numerical representations.
-
-### Improvement
-
-Use techniques such as **One-Hot Encoding** while ensuring train and test columns remain aligned.
+Categorical features were encoded before being passed to the model.
 
 ---
 
 ## 3. Highly Skewed Capital Features
 
-`capital-gain` and `capital-loss` contain many zero values and a relatively small number of large values.
+`capital-gain` and `capital-loss` contain many zero values and relatively few large values.
 
-This creates strongly skewed distributions.
+### Impact
 
-### Improvement
+These features have highly non-uniform distributions.
 
-Consider:
+### Future Improvement
 
-* Binary indicators such as `capital-gain > 0`
+Potential improvements include:
+
 * Log transformations
-* Other feature transformations
+* Binary indicators
+* Additional feature engineering
 
 ---
 
-## 4. Feature Interactions
+## 4. Class Imbalance
 
-The current education rule only looks at one feature.
+The positive class represents approximately 23.93% of the dataset.
 
-However, income may depend on combinations such as:
+### Impact
 
-> Education × Occupation × Age × Hours Worked
+Accuracy can become misleading when the majority class dominates.
 
-### Improvement
+### Solution
 
-Use feature engineering or models capable of learning nonlinear relationships.
-
----
-
-## 5. Class Imbalance
-
-The positive class is smaller than the negative class.
-
-This means a high accuracy score does not automatically mean the model is useful.
-
-### Improvement
-
-Continue monitoring:
+I monitored:
 
 * Precision
 * Recall
 * F1
+* ROC AUC
 * PR AUC
 
-and consider class weighting where appropriate.
+rather than relying on accuracy alone.
 
 ---
 
-## 6. Potentially Sensitive Features
+## 5. Data Leakage Risk
+
+During development, it was important to ensure that the target variable was not accidentally included among the features.
+
+### Solution
+
+The target was explicitly separated before model training.
+
+The final test set was also kept untouched during experimentation.
+
+---
+
+## 6. Feature Interactions
+
+A manually selected rule cannot capture complex interactions.
+
+### Solution
+
+HistGradientBoosting was introduced because it can learn nonlinear patterns and interactions from multiple features.
+
+---
+
+## 7. Potentially Sensitive Features
 
 The dataset contains attributes such as:
 
 * Race
 * Sex
 
-These features can affect predictions and raise important fairness considerations.
+These features can raise fairness concerns.
 
-### Improvement
-
-Before any real-world deployment, subgroup performance and fairness should be evaluated carefully.
-
----
-
-# 🖼️ Task 1 Pipeline
-
-<p align="center">
-  <img src="./assets/adult_income_pipeline.png" alt="Adult Income Prediction Machine Learning Pipeline" width="100%">
-</p>
-
-<p align="center">
-  <i>Task 1 — End-to-end Adult Income classification workflow</i>
-</p>
+Before real-world deployment, subgroup performance and fairness should be evaluated carefully.
 
 ---
 
 # 📊 Task 1 Results
 
-The notebook evaluates both baselines on the final hold-out set using the same evaluation framework.
+The project compares simple baselines against the improved ML model.
 
-| Baseline       |              Accuracy |             Precision |                Recall |                    F1 |               ROC AUC |                PR AUC |
-| -------------- | --------------------: | --------------------: | --------------------: | --------------------: | --------------------: | --------------------: |
-| Majority Class | Generated in notebook | Generated in notebook | Generated in notebook | Generated in notebook | Generated in notebook | Generated in notebook |
-| Education ≥ 13 | Generated in notebook | Generated in notebook | Generated in notebook | Generated in notebook | Generated in notebook | Generated in notebook |
+| Model                    |                  Accuracy |                 Precision |                    Recall |                        F1 |                   ROC AUC |                    PR AUC |
+| ------------------------ | ------------------------: | ------------------------: | ------------------------: | ------------------------: | ------------------------: | ------------------------: |
+| Majority Class           |     Generated in notebook |     Generated in notebook |     Generated in notebook |     Generated in notebook |     Generated in notebook |     Generated in notebook |
+| Education ≥ 13           |     Generated in notebook |     Generated in notebook |     Generated in notebook |     Generated in notebook |     Generated in notebook |     Generated in notebook |
+| **HistGradientBoosting** | **Generated in notebook** | **Generated in notebook** | **Generated in notebook** | **Generated in notebook** | **Generated in notebook** | **Generated in notebook** |
 
-The exact values are generated directly from the reproducible notebook so that the reported results always correspond to the actual dataset and fixed split.
+The exact metrics are generated directly from the reproducible notebook.
 
-### Baseline Interpretation
+This ensures that the README does not manually hard-code experimental values that could become inconsistent with the actual implementation.
 
-The majority-class baseline is useful as a minimum reference point but does not meaningfully identify positive cases.
+---
 
-The education-based rule is more informative because it uses an actual feature to identify a subset of people more likely to belong to the `>50K` class.
+# 📈 Baseline → ML Improvement
 
-A future machine-learning model should therefore provide a **material improvement over the education heuristic**, especially on the primary precision objective.
+The development process can be summarized as:
 
-Simply achieving higher accuracy than the majority baseline would not be enough.
+```text
+Majority Class
+      ↓
+Simple Reference
+      ↓
+Education ≥ 13 Rule
+      ↓
+Identify False Positives / False Negatives
+      ↓
+Use Full Feature Set
+      ↓
+Handle Missing Values
+      ↓
+Encode Categorical Variables
+      ↓
+HistGradientBoosting
+      ↓
+Learn Nonlinear Relationships
+      ↓
+Improved Predictive Performance
+```
+
+The key improvement was not simply changing one parameter.
+
+It was changing the problem from:
+
+> **A manually defined single-feature rule**
+
+into:
+
+> **A complete supervised machine-learning pipeline capable of learning relationships across the dataset.**
 
 ---
 
 # 📁 Generated Outputs
 
-The analysis produces reusable outputs including:
+The analysis and modeling workflow produces reusable outputs including:
 
 ```text
 adult_income_outputs/
@@ -694,7 +972,7 @@ adult_income_outputs/
 └── error_profile.csv
 ```
 
-Visualizations are saved under:
+Visualizations are stored under:
 
 ```text
 adult_income_plots/
@@ -704,45 +982,158 @@ including:
 
 * Numerical histograms
 * Categorical bar plots
-* Baseline confusion matrices
+* Confusion matrices
+* Model evaluation visualizations
+
+---
+
+# 🖼️ Task 1 Pipeline
+
+<p align="center">
+  <img src="./assets/adult_income_pipeline.png" alt="Adult Income Prediction Machine Learning Pipeline" width="100%">
+</p>
+
+<p align="center">
+  <i>Task 1 — End-to-end Adult Income classification and improvement pipeline</i>
+</p>
 
 ---
 
 # 🧭 Complete Task Workflow
 
-<p align="center">
-  <img src="./assets/adult_income_pipeline.png" alt="Complete Task 1 Pipeline" width="95%">
-</p>
+The complete Task 1 workflow is:
 
-The project follows a reproducible progression:
-
-**Problem Definition → Data Loading → Data Cleaning → EDA → Class Analysis → Reproducible Split → Baseline Modeling → Evaluation → Error Analysis → Improvement Planning**
+```text
+Problem Definition
+        ↓
+Business Objective
+        ↓
+Dataset Loading
+        ↓
+Data Cleaning
+        ↓
+Missing Value Analysis
+        ↓
+Exploratory Data Analysis
+        ↓
+Class Distribution
+        ↓
+Stratified Train / Dev / Test Split
+        ↓
+Data Leakage Prevention
+        ↓
+Majority Baseline
+        ↓
+Education Rule Baseline
+        ↓
+Error Analysis
+        ↓
+Identify Model Limitations
+        ↓
+Preprocessing Pipeline
+        ↓
+Median Imputation
+        ↓
+Categorical Encoding
+        ↓
+HistGradientBoosting
+        ↓
+Development Evaluation
+        ↓
+Error Analysis
+        ↓
+Final Hold-out Evaluation
+        ↓
+Improvement Planning
+```
 
 ---
 
 # 🚀 Next Modeling Stage
 
-The baseline stage establishes the foundation for more advanced experiments.
+The current ML stage establishes a strong foundation for further experimentation.
 
 ### Planned improvements
 
-* [ ] Handle missing categorical values
-* [ ] Build a preprocessing pipeline
-* [ ] One-hot encode categorical variables
-* [ ] Engineer useful numerical features
-* [ ] Transform skewed capital features
-* [ ] Train Logistic Regression
-* [ ] Train Decision Tree
-* [ ] Train Random Forest
-* [ ] Train Gradient Boosting / XGBoost
-* [ ] Compare models
-* [ ] Tune hyperparameters using the development set
-* [ ] Optimize precision
-* [ ] Monitor recall, F1 and PR AUC
+* [ ] Compare Logistic Regression
+* [ ] Compare Decision Tree
+* [ ] Compare Random Forest
+* [ ] Compare Gradient Boosting alternatives
+* [ ] Evaluate XGBoost
+* [ ] Perform systematic hyperparameter tuning
+* [ ] Optimize classification threshold
+* [ ] Optimize precision while monitoring recall
+* [ ] Investigate feature importance
 * [ ] Perform deeper error analysis
+* [ ] Engineer additional features
 * [ ] Evaluate subgroup performance
-* [ ] Freeze the final pipeline
-* [ ] Perform one final evaluation on the untouched hold-out set
+* [ ] Investigate fairness metrics
+* [ ] Compare model stability across random seeds
+* [ ] Freeze the final preprocessing + model pipeline
+* [ ] Perform final evaluation on the untouched test set
+
+---
+
+# 📌 What I Improved
+
+The most important improvements made during Task 1 were:
+
+### Before
+
+```text
+Raw Dataset
+   ↓
+Basic Cleaning
+   ↓
+EDA
+   ↓
+Majority Baseline
+   ↓
+Education Rule
+```
+
+### After
+
+```text
+Raw Dataset
+   ↓
+Cleaning
+   ↓
+Target Separation
+   ↓
+Leakage Prevention
+   ↓
+Stratified Train / Dev / Test
+   ↓
+Missing Value Handling
+   ↓
+Categorical Encoding
+   ↓
+Full Feature Set
+   ↓
+HistGradientBoosting
+   ↓
+Development Evaluation
+   ↓
+Error Analysis
+   ↓
+Final Hold-out Evaluation
+```
+
+### Main Improvements
+
+| Area             | Improvement                                      |
+| ---------------- | ------------------------------------------------ |
+| Data             | Better cleaning and missing-value handling       |
+| Features         | Used the full feature set instead of one feature |
+| Categorical Data | Added categorical encoding                       |
+| Numerical Data   | Added median imputation                          |
+| Model            | Replaced simple rules with HistGradientBoosting  |
+| Generalization   | Used train/dev/test methodology                  |
+| Leakage          | Explicitly separated target from features        |
+| Evaluation       | Added six evaluation metrics                     |
+| Errors           | Added FP/FN analysis                             |
+| Reproducibility  | Fixed random seed and structured pipeline        |
 
 ---
 
@@ -800,7 +1191,13 @@ pip install numpy pandas matplotlib seaborn scikit-learn jupyter
 jupyter notebook
 ```
 
-Open the Adult Income notebook and run the cells from top to bottom.
+Open:
+
+```text
+adult_income_baselines_error_analysis.ipynb
+```
+
+and run the cells from top to bottom.
 
 The dataset is fetched automatically through OpenML.
 
@@ -814,48 +1211,97 @@ The dataset is fetched automatically through OpenML.
 | Business Objective        |    ✅   |
 | Primary Metric Selection  |    ✅   |
 | Dataset Loading           |    ✅   |
-| Missing Value Handling    |    ✅   |
+| Data Cleaning             |    ✅   |
+| Missing Value Analysis    |    ✅   |
 | Target Conversion         |    ✅   |
 | Class Base Rate           |    ✅   |
 | Numerical EDA             |    ✅   |
 | Categorical EDA           |    ✅   |
 | Visualizations            |    ✅   |
 | Summary Tables            |    ✅   |
-| Stratified Hold-out Split |    ✅   |
+| Stratified Train Split    |    ✅   |
 | Development Split         |    ✅   |
+| Hold-out Test Split       |    ✅   |
+| Data Leakage Prevention   |    ✅   |
 | Majority Baseline         |    ✅   |
 | Education Rule Baseline   |    ✅   |
-| Accuracy                  |    ✅   |
-| Precision                 |    ✅   |
-| Recall                    |    ✅   |
-| F1 Score                  |    ✅   |
-| ROC AUC                   |    ✅   |
-| PR AUC                    |    ✅   |
+| Full Feature Set          |    ✅   |
+| Median Imputation         |    ✅   |
+| Categorical Encoding      |    ✅   |
+| HistGradientBoosting      |    ✅   |
+| Accuracy Evaluation       |    ✅   |
+| Precision Evaluation      |    ✅   |
+| Recall Evaluation         |    ✅   |
+| F1 Score Evaluation       |    ✅   |
+| ROC AUC Evaluation        |    ✅   |
+| PR AUC Evaluation         |    ✅   |
 | Confusion Matrices        |    ✅   |
 | False Positive Analysis   |    ✅   |
 | False Negative Analysis   |    ✅   |
-| Feature/Error Analysis    |    ✅   |
+| Error Profiling           |    ✅   |
+| Accuracy Improvement      |    ✅   |
+| Model Development         |    ✅   |
 | Issues Identified         |    ✅   |
 | Improvement Plan          |    ✅   |
-| Advanced Models           |   🔜   |
+| Advanced Model Comparison |   🔜   |
 | Hyperparameter Tuning     |   🔜   |
+| Threshold Optimization    |   🔜   |
 | Final Model               |   🔜   |
 
 ---
 
 # 🎯 Final Takeaway
 
-Task 1 was not only about predicting income.
+Task 1 was not only about predicting whether a person earns more than `$50K`.
 
-The main objective was to establish a **reliable machine-learning workflow** before moving to complex models.
+The main objective was to build a **reliable and progressively improving machine-learning workflow**.
 
-I started by defining the business problem and choosing **precision** as the primary metric. I then loaded and cleaned the Adult dataset, explored its numerical and categorical features, analyzed the class distribution, and created a reproducible stratified train/dev/test split.
+I started by defining the business problem and selecting **precision** as the primary metric. I then loaded and cleaned the Adult dataset, handled missing-value representations, converted the target into a binary classification problem, and performed detailed exploratory data analysis.
 
-After that, I built two transparent baselines — a **majority-class predictor** and an **education-based rule** — and evaluated them using accuracy, precision, recall, F1, ROC AUC, PR AUC, and confusion matrices.
+I created a reproducible **70% training / 10% development / 20% hold-out test split** using stratified sampling and explicitly separated the target variable from the feature matrix to reduce the risk of data leakage.
 
-Finally, I performed initial false-positive and false-negative analysis to understand where the simple rule fails. This analysis identified missing categorical values, categorical encoding, skewed capital features, feature interactions, class imbalance, and fairness considerations as the main areas to address in the next modeling stage.
+I first established two simple baselines:
 
-> **The baseline is the starting point — the goal of the next stage is to build a model that learns the relationships the simple rules cannot capture.**
+1. **Majority-class prediction**
+2. **Education ≥ 13 rule**
+
+These baselines helped demonstrate the limitations of simple prediction strategies.
+
+The major improvement came from moving to a real ML pipeline using **median imputation, categorical encoding, the complete feature set, and HistGradientBoosting**.
+
+Instead of relying on one manually selected feature, the model can learn nonlinear relationships and interactions across:
+
+```text
+Age
+Education
+Occupation
+Workclass
+Hours-per-week
+Capital Gain
+Capital Loss
+Marital Status
+Relationship
+```
+
+This made the modeling process substantially more representative of a real-world machine-learning workflow.
+
+I then evaluated the model using:
+
+* Accuracy
+* Precision
+* Recall
+* F1 Score
+* ROC AUC
+* PR AUC
+* Confusion Matrix
+
+and continued to analyze false positives and false negatives to understand remaining model weaknesses.
+
+The biggest lesson from Task 1 was:
+
+> **Improving model performance is not just about choosing a more powerful algorithm. It requires better data preparation, correct feature handling, leakage prevention, appropriate evaluation, and iterative error analysis.**
+
+The current model provides the next foundation for further improvements through model comparison, hyperparameter tuning, threshold optimization, feature engineering, and deeper fairness/error analysis.
 
 ---
 
