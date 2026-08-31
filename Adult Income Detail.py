@@ -1,8 +1,3 @@
-# Generated from: adult_income_baselines_error_analysis.ipynb
-# Converted at: 2026-08-31T08:02:16.934Z
-# Next step (optional): refactor into modules & generate tests with RunCell
-# Quick start: pip install runcell
-
 # # UCI Adult Income — Baselines, Hold-out Evaluation & Initial Error Analysis
 # 
 # **Goal:** Predict whether annual income is **> $50K**. The notebook keeps the final 20% hold-out untouched until the end, uses a fixed random seed, evaluates two simple baselines, and identifies data/feature issues for the next modeling iteration.
@@ -28,6 +23,7 @@ from sklearn.metrics import (
     ConfusionMatrixDisplay
 )
 from pathlib import Path
+from IPython.display import display
 
 RANDOM_STATE = 42
 TEST_SIZE = 0.20
@@ -141,7 +137,7 @@ for col in plot_numeric:
 plot_cats = [c for c in ["education", "marital-status", "workclass", "occupation"] if c in df.columns]
 
 for col in plot_cats:
-    counts = df[col].fillna("Missing").value_counts().head(12)
+    counts = df[col].astype("string").fillna("Missing").value_counts().head(12)
     plt.figure(figsize=(8, 5))
     counts.sort_values().plot(kind="barh")
     plt.title(f"Top categories: {col}")
