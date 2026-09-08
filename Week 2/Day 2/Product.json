@@ -1,0 +1,8 @@
+{
+  "laptop_x1": {"name": "Laptop X1", "price_usd": 899, "category": "electronics", "stock": 12},
+  "laptop_z9": {"name": "Laptop Z9 Pro", "price_usd": 1499, "category": "electronics", "stock": 5},
+  "phone_alpha": {"name": "Phone Alpha", "price_usd": 599, "category": "electronics", "stock": 30},
+  "phone_beta": {"name": "Phone Beta Max", "price_usd": 1099, "category": "electronics", "stock": 8},
+  "headphones_air": {"name": "Headphones Air", "price_usd": 129, "category": "audio", "stock": 50},
+  "headphones_pro": {"name": "Headphones Pro Noise-Cancel", "price_usd": 279, "category": "audio", "stock": 20}
+}
