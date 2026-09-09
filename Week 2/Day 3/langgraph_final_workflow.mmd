@@ -1,0 +1,13 @@
+```mermaid
+flowchart TD
+    A([Start]) --> B[Plan]
+    B --> C[Retrieve]
+    C --> D[Generate]
+    D --> E[Critique]
+    E -->|score < 0.8 and retries remain| D
+    E -->|acceptable or max retries reached| F[Human approval]
+    F -->|approved| G[Format]
+    F -->|rejected| H[Revise]
+    H --> D
+    G --> I([End])
+```
