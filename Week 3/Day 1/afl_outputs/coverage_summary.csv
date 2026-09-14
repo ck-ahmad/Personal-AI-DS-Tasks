@@ -1,0 +1,5 @@
+table,date_min,date_max,season_count,team_count,player_count
+players_info,,,,,
+player_round,1983-03-27,2025-09-27,43.0,20.0,3109.0
+player_season,,,43.0,114.0,3117.0
+matches,1983-03-26,2025-09-27,43.0,40.0,

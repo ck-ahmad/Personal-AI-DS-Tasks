@@ -1,0 +1,7 @@
+check,result
+Current-match scores excluded from model feature candidates,_home_score/_away_score excluded
+Rolling team features shifted by one match,PASS
+Rolling player features shifted by one match,PASS
+H2H uses only prior meetings,PASS
+Rest uses previous appearance only,PASS
+Potential suspicious feature names,None detected

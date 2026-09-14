@@ -1,0 +1,19 @@
+feature,description,window,source_columns,leakage_rule
+home_win_rate_l3,"Home team's mean result over previous 3 matches (win=1, draw=.5, loss=0).",previous 3 team games,match results,shift(1); pre-match only
+away_win_rate_l3,Away team's mean result over previous 3 matches.,previous 3 team games,match results,shift(1); pre-match only
+home_win_rate_l5,Home team's mean result over previous 5 matches.,previous 5 team games,match results,shift(1); pre-match only
+away_win_rate_l5,Away team's mean result over previous 5 matches.,previous 5 team games,match results,shift(1); pre-match only
+home_score_for_avg_l5,Average points scored by home team.,previous 5 team games,scores,shift(1); pre-match only
+away_score_for_avg_l5,Average points scored by away team.,previous 5 team games,scores,shift(1); pre-match only
+home_score_against_avg_l5,Average points conceded by home team.,previous 5 team games,scores,shift(1); pre-match only
+away_score_against_avg_l5,Average points conceded by away team.,previous 5 team games,scores,shift(1); pre-match only
+home_win_streak,Consecutive prior wins entering the match.,all prior team games,match results,current match excluded
+away_win_streak,Consecutive prior wins entering the match.,all prior team games,match results,current match excluded
+home_days_rest,Days since home team's previous match.,previous appearance,match dates,previous date only
+away_days_rest,Days since away team's previous match.,previous appearance,match dates,previous date only
+h2h_home_win_rate,Home team's historical win rate against this opponent.,all prior meetings,match results,current meeting excluded
+h2h_meetings,Number of previous meetings between the two teams.,all prior meetings,match history,current meeting excluded
+form_diff_l3,Home 3-game form minus away 3-game form.,previous 3 team games,rolling form,pre-match only
+form_diff_l5,Home 5-game form minus away 5-game form.,previous 5 team games,rolling form,pre-match only
+score_form_diff_l3,Home 3-game scoring average minus away 3-game scoring average.,previous 3 team games,scores,pre-match only
+score_form_diff_l5,Home 5-game scoring average minus away 5-game scoring average.,previous 5 team games,scores,pre-match only

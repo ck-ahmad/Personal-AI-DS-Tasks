@@ -1,0 +1,5 @@
+table,source_file,rows,columns,grain,date_column,min_date,max_date,seasons,duplicate_rows,missing_cells
+players_info,afl_datasets/afl_players_info_raw.csv,2848,16,player master/profile,,,,,5,5078
+player_round,afl_datasets/afl_players_round_by_round_stats_raw.csv,274089,36,player-game / player-round,match_date,1983-03-27,2025-09-27,43.0,10,1608029
+player_season,afl_datasets/afl_players_seasonal_stats_raw.csv,25491,54,player-season,,,,43.0,10,139253
+matches,afl_datasets/team_matches_home_away_raw.csv,15808,19,match,match_date,1983-03-26,2025-09-27,43.0,0,398

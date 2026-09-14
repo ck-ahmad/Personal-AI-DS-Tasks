@@ -1,0 +1,6 @@
+{
+  "method": "latest_season_holdout",
+  "test_seasons": [
+    "2025"
+  ]
+}
