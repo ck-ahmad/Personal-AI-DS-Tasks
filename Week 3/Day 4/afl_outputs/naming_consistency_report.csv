@@ -1,0 +1,15 @@
+table,column,unique_values,sample_values
+players_info,player_name,2826,Ryan Abbott | Gary Ablett | Leek Aleer | Nathan Ablett | Cain Ackland | Blake Acres | Leigh Adams | Taylor Adams | Jed Adcock | Dylan Addison
+players_info,player_full_name,2843,Ryan_Abbott | Gary_Ablett1 | Leek_Aleer | Nathan_Ablett | Cain_Ackland | Blake_Acres | Leigh_Adams | Taylor_Adams | Jed_Adcock | Dylan_Addison
+players_info,player_link,2843,https://afltables.com/afl/stats/players/R/Ryan_Abbott.html | https://afltables.com/afl/stats/players/G/Gary_Ablett1.html | https://afltables.com/afl/stats/players/L/Leek_Aleer.html | https://afltables.com/afl/stats/players/N/Nathan_Ablett.html | https://afltables.com/afl/stats/players/C/Cain_Ackland.html | https://afltables.com/afl/stats/players/B/Blake_Acres.html | https://afltables.com/afl/stats/players/L/Leigh_Adams.html | https://afltables.com/afl/stats/players/T/Taylor_Adams.html | https://afltables.com/afl/stats/players/J/Jed_Adcock.html | https://afltables.com/afl/stats/players/D/Dylan_Addison.html
+players_info,player_common_names,75,{Big Mac} | {Andrews} | {Tommy Atkins} | {Bez} | {The Lizard} | {DBJ} | {Chols Royce} | {Cogs} | {Crippa} | {Jaicos}
+players_info,player_teams,309,"{Geelong Cats,St Kilda Saints} | {Geelong Cats,Gold Coast Suns} | {Carlton Blues,Port Adelaide Power,St Kilda Saints} | {Carlton Blues,Fremantle Dockers,St Kilda Saints} | {North Melbourne Kangaroos} | {Collingwood Magpies,Greater Western Sydney Giants,Sydney Swans} | {Brisbane Lions,Western Bulldogs} | {Greater Western Sydney Giants,Western Bulldogs} | {Gold Coast Suns} | {Brisbane Lions,Collingwood Magpies,Fremantle Dockers}"
+player_round,team,20,Hawthorn Hawks | Geelong Cats | Essendon Bombers | Western Bulldogs | Richmond Tigers | St Kilda Saints | Fremantle Dockers | Brisbane Lions | Port Adelaide Power | West Coast Eagles
+player_round,player_id,3109,45552 | 44356 | 45955 | 45656 | 45929 | 45344 | 45630 | 45747 | 45591 | 45695
+player_season,player_id,3117,43261 | 43262 | 43263 | 45805 | 43265 | 43266 | 45479 | 43267 | 43268 | 43269
+player_season,team,114,Geelong Cats | St Kilda Saints | SYDNEY SWANS | Gold Coast Suns | Adelaide Crows | Port Adelaide Power | Carlton Blues | Fremantle Dockers | Hawthorn Hawks | Western Bulldogs
+matches,team_name,40,Hawthorn Hawks | North Melbourne Kangaroos | Sydney Swans | W. Bulldogs | Brisbane Lions | Carlton Blues | Collingwood Magpies | Essendon Bombers | Fitzroy Lions | Fremantle Dockers
+matches,team_quarter_scores,15750,4.5 5.7 10.11 13.13 13.13 13.13 | 2.3 6.12 9.12 12.19 13.23 15.24 | 2.2 6.2 12.3 15.8 | 1.8 5.15 8.16 11.19 | 3.3 5.8 6.12 8.15 | 4.1 9.6 14.7 18.8 | 1.2 6.5 10.5 14.8 | 3.7 9.9 11.12 15.12 | 3.5 9.5 10.7 16.9 | 6.2 13.4 18.9 21.11
+matches,team_score,204,91 | 114 | 98 | 85 | 63 | 116 | 92 | 102 | 105 | 137
+matches,team_goals_kicked,37,13 | 15 | 11 | 8 | 18 | 14 | 16 | 21 | 27 | 7
+matches,team_behinds,31,13 | 24 | 8 | 19 | 15 | 12 | 9 | 11 | 10 | 16

@@ -1,0 +1,6 @@
+target_name,level,type,definition,source_columns
+match_result,match,3-class classification,HOME_WIN if home score > away score; AWAY_WIN if home score < away score; DRAW otherwise.,"home_score, away_score"
+home_win,match,binary classification,"1 when home team wins, else 0.","home_score, away_score"
+match_margin,match,regression,home_score - away_score.,"home_score, away_score"
+top_disposal_player,player-game within match,ranking target,Player(s) with the maximum disposals in a match; ties are retained.,player-round disposals
+top_goal_kicker,player-game within match,ranking target,Player(s) with the maximum goals in a match; ties are retained.,player-round goals

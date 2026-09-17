@@ -1,0 +1,15 @@
+feature,importance,model,stat
+goals_avg_l5,0.7369268159733392,RandomForestRegressor,goals
+fantasy_points_avg_l5,0.029382070685659796,RandomForestRegressor,goals
+handballs_avg_l5,0.029138757389125795,RandomForestRegressor,goals
+marks_avg_l5,0.027125249756144096,RandomForestRegressor,goals
+fantasy_points_avg_l3,0.024047271729122525,RandomForestRegressor,goals
+tackles_avg_l5,0.021452325548268633,RandomForestRegressor,goals
+disposals_avg_l5,0.021253643400323284,RandomForestRegressor,goals
+kicks_avg_l5,0.01932497423879486,RandomForestRegressor,goals
+marks_avg_l3,0.017349093633950218,RandomForestRegressor,goals
+disposals_avg_l3,0.01605168996344128,RandomForestRegressor,goals
+goals_avg_l3,0.015598063094398913,RandomForestRegressor,goals
+handballs_avg_l3,0.014851066286436653,RandomForestRegressor,goals
+kicks_avg_l3,0.014476291642795625,RandomForestRegressor,goals
+tackles_avg_l3,0.013022686658198949,RandomForestRegressor,goals

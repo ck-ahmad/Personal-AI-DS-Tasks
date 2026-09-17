@@ -1,0 +1,2 @@
+stat,model,train_rows,holdout_rows,MAE,RMSE,top5_hit_rate,baseline_top5_hit_rate
+disposals,RandomForestRegressor,200145,62501,4.012016089296898,5.156520404321674,0.6543079096045198,

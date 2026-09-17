@@ -1,0 +1,2 @@
+stat,model,train_rows,holdout_rows,MAE,RMSE,top5_hit_rate,baseline_top5_hit_rate
+goals,RandomForestRegressor,147372,49670,0.6018485014370868,0.8221938115697913,0.5828304597701149,
